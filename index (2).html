@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ravinder Negi — Talent Acquisition Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0e0c;
+  --bg2:#141412;
+  --border:rgba(255,255,255,0.08);
+  --text:#f2efe8;
+  --muted:#6b6b64;
+  --accent:#c8f06e;
+  --font-head:'Syne',sans-serif;
+  --font-mono:'Syne Mono',monospace;
+  --font-body:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;font-weight:300;overflow-x:hidden;cursor:none}
+a{color:inherit;text-decoration:none}
+
+/* cursor */
+#cur{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;width:12px;height:12px;background:var(--accent);border-radius:50%;transform:translate(-50%,-50%);transition:width .2s,height .2s,opacity .2s}
+#cur.hover{width:48px;height:48px;opacity:.3}
+
+/* loader */
+#loader{position:fixed;inset:0;z-index:1000;background:var(--bg);display:flex;flex-direction:column;justify-content:space-between;padding:40px 48px}
+#loader.out{animation:fadeOut .6s .2s forwards}
+@keyframes fadeOut{to{opacity:0;visibility:hidden;pointer-events:none}}
+.ld-top{display:flex;justify-content:space-between;align-items:flex-start}
+.ld-logo{font-family:var(--font-head);font-size:18px;font-weight:700;letter-spacing:.04em}
+.ld-tag{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.ld-pct{font-family:var(--font-head);font-size:clamp(80px,14vw,180px);font-weight:800;line-height:1;color:var(--text)}
+.ld-bar{width:100%;height:1px;background:var(--border)}
+.ld-fill{height:100%;background:var(--accent);width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.ld-bottom{display:flex;justify-content:space-between;align-items:flex-end}
+.ld-hint{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
+nav.scrolled{background:rgba(14,14,12,.9);backdrop-filter:blur(12px);border-color:var(--border)}
+.nav-logo{font-family:var(--font-head);font-size:16px;font-weight:700;letter-spacing:.06em}
+.nav-center{position:absolute;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:.08em}
+.nav-right{display:flex;gap:32px;list-style:none}
+.nav-right a{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.nav-right a:hover{color:var(--text)}
+
+/* hero */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 60px;position:relative;overflow:hidden}
+.hero-grid-lines{position:absolute;inset:0;pointer-events:none}
+.hero-grid-lines::before,.hero-grid-lines::after{content:'';position:absolute;top:0;bottom:0;width:1px;background:var(--border)}
+.hero-grid-lines::before{left:33.33%}
+.hero-grid-lines::after{left:66.66%}
+.hero-hi{font-family:var(--font-head);font-size:clamp(32px,5vw,72px);font-weight:800;line-height:1;opacity:0;transform:translateY(40px);animation:up .8s 1.8s cubic-bezier(.16,1,.3,1) forwards}
+.hero-name{font-family:var(--font-head);font-size:clamp(48px,10vw,152px);font-weight:800;line-height:.92;letter-spacing:-.01em;opacity:0;transform:translateY(60px);animation:up .9s 1.95s cubic-bezier(.16,1,.3,1) forwards;overflow:visible}
+.hero-name span{color:var(--accent)}
+.hero-meta{display:flex;align-items:center;justify-content:space-between;margin-top:40px;opacity:0;animation:up .7s 2.2s cubic-bezier(.16,1,.3,1) forwards}
+.hero-location{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.hero-location span{color:var(--accent);margin-right:8px}
+.hero-scroll-hint{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:12px}
+.hero-scroll-hint::after{content:'';display:block;width:40px;height:1px;background:var(--muted)}
+.hero-counter{position:absolute;right:48px;top:50%;transform:translateY(-50%);text-align:right}
+.hero-counter-num{font-family:var(--font-head);font-size:clamp(48px,8vw,120px);font-weight:800;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.1)}
+.hero-counter-label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+@keyframes up{to{opacity:1;transform:translateY(0)}}
+
+/* marquee */
+.marquee{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px 0;white-space:nowrap}
+.marquee-track{display:inline-flex;animation:scroll 25s linear infinite}
+.marquee-track:hover{animation-play-state:paused}
+.m-item{font-family:var(--font-head);font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:0 32px}
+.m-item b{color:var(--accent);font-weight:400;margin:0 8px;font-family:var(--font-mono)}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* sections */
+section{padding:100px 48px}
+.s-eyebrow{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:56px;display:flex;align-items:center;gap:16px}
+.s-eyebrow::before{content:attr(data-num);font-family:var(--font-mono);color:var(--accent);font-size:10px}
+
+/* statement */
+#statement{border-top:1px solid var(--border)}
+.stmt-grid{display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:start}
+.stmt-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding-top:8px}
+.stmt-text{font-family:var(--font-head);font-size:clamp(28px,3.5vw,52px);font-weight:700;line-height:1.15}
+.stmt-text em{color:var(--accent);font-style:normal}
+.stmt-focus{margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;gap:0}
+.focus-item{flex:1;padding:0 24px;border-right:1px solid var(--border)}
+.focus-item:first-child{padding-left:0}
+.focus-item:last-child{border-right:none}
+.focus-tag{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.focus-val{font-family:var(--font-head);font-size:16px;font-weight:600}
+
+/* superpowers / skills */
+#superpowers{border-top:1px solid var(--border);background:var(--bg2)}
+.sp-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border)}
+.sp-card{padding:44px 40px;border:1px solid var(--border);transition:background .25s}
+.sp-card:hover{background:rgba(200,240,110,0.04)}
+.sp-num{font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:.1em;margin-bottom:20px}
+.sp-title{font-family:var(--font-head);font-size:20px;font-weight:700;margin-bottom:14px}
+.sp-desc{font-size:13px;line-height:1.8;color:var(--muted)}
+
+/* experience */
+#experience{border-top:1px solid var(--border)}
+.exp-row{display:grid;grid-template-columns:220px 1fr;gap:48px;padding:44px 0;border-bottom:1px solid var(--border)}
+.exp-row:first-of-type{border-top:1px solid var(--border)}
+.exp-left{}
+.exp-period{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;line-height:1.7}
+.exp-current{display:inline-block;margin-top:8px;padding:4px 10px;border:1px solid var(--accent);border-radius:2px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.exp-right{}
+.exp-company{font-family:var(--font-head);font-size:clamp(22px,3vw,36px);font-weight:800;margin-bottom:4px}
+.exp-role{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.exp-desc{font-size:13px;line-height:1.85;color:var(--muted);max-width:600px}
+.exp-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.exp-tag{padding:6px 14px;border:1px solid var(--border);border-radius:2px;font-size:11px;letter-spacing:.06em;color:var(--muted)}
+
+/* clients */
+#clients{border-top:1px solid var(--border);background:var(--bg2)}
+.clients-row{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--border);margin-top:0}
+.client-cell{flex:1;min-width:200px;padding:36px 32px;border:1px solid var(--border);font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--muted);transition:all .25s;display:flex;align-items:center;gap:12px}
+.client-cell:hover{color:var(--text);background:rgba(200,240,110,0.04)}
+.client-cell::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .25s}
+.client-cell:hover::before{background:var(--accent)}
+
+/* contact */
+#contact{border-top:1px solid var(--border);text-align:center;padding:120px 48px}
+.contact-eyebrow{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+.contact-heading{font-family:var(--font-head);font-size:clamp(48px,9vw,140px);font-weight:800;line-height:.9;letter-spacing:-.01em;margin-bottom:48px}
+.contact-heading span{color:var(--accent)}
+.contact-sub{font-size:14px;color:var(--muted);line-height:1.8;max-width:440px;margin:0 auto 48px}
+.contact-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{padding:14px 32px;font-family:var(--font-body);font-size:12px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--border);color:var(--text);transition:all .2s;cursor:none}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.filled{background:var(--accent);border-color:var(--accent);color:#0e0e0c;font-weight:500}
+.btn.filled:hover{background:transparent;color:var(--accent)}
+
+/* footer */
+footer{border-top:1px solid var(--border);padding:28px 48px;display:flex;justify-content:space-between;align-items:center}
+.ft-copy{font-size:12px;color:var(--muted)}
+.ft-links{display:flex;gap:28px}
+.ft-links a{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.ft-links a:hover{color:var(--text)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.on{opacity:1;transform:none}
+.reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}.reveal.d3{transition-delay:.3s}.reveal.d4{transition-delay:.4s}.reveal.d5{transition-delay:.5s}
+
+@media(max-width:860px){
+  nav{padding:20px 24px}
+  .nav-center,.nav-right{display:none}
+  section{padding:72px 24px}
+  #hero{padding:0 24px 48px}
+  .hero-counter{display:none}
+  .stmt-grid{grid-template-columns:1fr}
+  .sp-grid{grid-template-columns:1fr}
+  .exp-row{grid-template-columns:1fr}
+  .exp-period{display:flex;gap:16px;flex-wrap:wrap}
+  footer{flex-direction:column;gap:16px;text-align:center}
+  .ft-links{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-top">
+    <div class="ld-logo">RN ™</div>
+    <div class="ld-tag">Talent Acquisition Manager</div>
+  </div>
+  <div>
+    <div class="ld-pct" id="ld-num">0%</div>
+    <div class="ld-bar"><div class="ld-fill" id="ld-fill"></div></div>
+  </div>
+  <div class="ld-bottom">
+    <div class="ld-hint">US IT Staffing · 10+ Years</div>
+    <div class="ld-hint">Noida, India</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">Ravinder Negi</div>
+  <div class="nav-center" id="clock">Local / --:--</div>
+  <ul class="nav-right">
+    <li><a href="#statement">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="https://www.linkedin.com/in/ravinder-negiuk" target="_blank">LinkedIn ↗</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-lines"></div>
+  <div class="hero-counter">
+    <div class="hero-counter-num" id="exp-counter">0</div>
+    <div class="hero-counter-label">Years of<br/>Experience</div>
+  </div>
+  <div class="hero-hi">Hi, I'm</div>
+  <div class="hero-name">RAVINDER</div>
+  <div class="hero-name" style="animation-delay:2.05s;color:var(--accent)">NEGI</div>
+  <div class="hero-meta">
+    <div class="hero-location"><span>◆</span> Based in India &nbsp;|&nbsp; Scroll to Explore</div>
+    <div class="hero-scroll-hint">Talent Acquisition Manager</div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track" id="mq"></div>
+</div>
+
+<!-- STATEMENT -->
+<section id="statement">
+  <div class="s-eyebrow" data-num="01">About</div>
+  <div class="stmt-grid">
+    <div class="stmt-label reveal">Statement</div>
+    <div>
+      <div class="stmt-text reveal d1">
+        I connect <em>elite tech talent</em> with the teams building the future — with precision, compliance, and a decade of trust.
+      </div>
+      <div class="stmt-focus reveal d2">
+        <div class="focus-item">
+          <div class="focus-tag">Model</div>
+          <div class="focus-val">C2C · W2 · 1099</div>
+        </div>
+        <div class="focus-item">
+          <div class="focus-tag">Visa Types</div>
+          <div class="focus-val">H1B · GC · EAD · OPT · TN</div>
+        </div>
+        <div class="focus-item">
+          <div class="focus-tag">Market</div>
+          <div class="focus-val">US IT Staffing</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPERPOWERS -->
+<section id="superpowers">
+  <div class="s-eyebrow" data-num="02">Superpowers</div>
+  <div class="sp-grid">
+    <div class="sp-card reveal">
+      <div class="sp-num">01 —</div>
+      <div class="sp-title">Full-Cycle Recruitment</div>
+      <div class="sp-desc">From Boolean sourcing and technical screening to rate negotiation, onboarding, and post-placement follow-up. Every step handled with speed and precision.</div>
+    </div>
+    <div class="sp-card reveal d1">
+      <div class="sp-num">02 —</div>
+      <div class="sp-title">Niche Role Closure</div>
+      <div class="sp-desc">No role is too hard to fill. Advanced X-Ray search, LinkedIn Recruiter, and a deep candidate network built over 10+ years means I close roles others can't.</div>
+    </div>
+    <div class="sp-card reveal d1">
+      <div class="sp-num">03 —</div>
+      <div class="sp-title">Immigration Compliance</div>
+      <div class="sp-desc">Deep expertise across H1B, GC, EAD, OPT, USC, TN, and EB3 visa types. Compliance-first hiring that protects clients and candidates at every step.</div>
+    </div>
+    <div class="sp-card reveal d2">
+      <div class="sp-num">04 —</div>
+      <div class="sp-title">Team Leadership</div>
+      <div class="sp-desc">Built and mentored high-performance recruitment teams. I drive SLA adherence, quality benchmarks, and delivery consistency across complex accounts.</div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="s-eyebrow" data-num="03">Experience</div>
+
+  <div class="exp-row reveal">
+    <div class="exp-left">
+      <div class="exp-period">Apr 2018 — Present<br/>Noida, India</div>
+      <div class="exp-current">Current</div>
+    </div>
+    <div class="exp-right">
+      <div class="exp-company">Tech3Pillars Technologies</div>
+      <div class="exp-role">Account Manager</div>
+      <div class="exp-desc">Spearheading US IT staffing for Fortune 500 clients. Managing full-cycle recruitment across Java, DevOps, Cloud (AWS/Azure), Data Engineering, and Project Management. Building and leading high-performance teams that consistently exceed quarterly targets.</div>
+      <div class="exp-tags">
+        <span class="exp-tag">TCS</span><span class="exp-tag">Infosys</span><span class="exp-tag">HCL Americas</span><span class="exp-tag">LTI Mindtree</span><span class="exp-tag">ExxonMobil</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-row reveal">
+    <div class="exp-left">
+      <div class="exp-period">Jan 2016 — Mar 2018<br/>Noida, India</div>
+    </div>
+    <div class="exp-right">
+      <div class="exp-company">Nityo Infotech</div>
+      <div class="exp-role">Sr. IT Recruiter / Lead</div>
+      <div class="exp-desc">Led technical recruitment for US clients across banking, healthcare, and enterprise technology. Managed a team of recruiters, introduced efficient sourcing pipelines, and built a strong referral network that delivered on urgent ramp-ups.</div>
+      <div class="exp-tags">
+        <span class="exp-tag">Banking</span><span class="exp-tag">Healthcare</span><span class="exp-tag">Enterprise Tech</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-row reveal">
+    <div class="exp-left">
+      <div class="exp-period">Nov 2013 — Jan 2016<br/>Noida, India</div>
+    </div>
+    <div class="exp-right">
+      <div class="exp-company">TRG — Technology Resource Group</div>
+      <div class="exp-role">Technical Recruiter</div>
+      <div class="exp-desc">Handled full-cycle recruitment for US-based clients across IT and digital transformation. Built strong candidate and vendor relationships that drove consistent delivery and retention metrics.</div>
+      <div class="exp-tags">
+        <span class="exp-tag">Full-Cycle</span><span class="exp-tag">US Clients</span><span class="exp-tag">IT Staffing</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section id="clients">
+  <div class="s-eyebrow" data-num="04">Key Partners &amp; Clients</div>
+  <div class="clients-row">
+    <div class="client-cell reveal">Infosys</div>
+    <div class="client-cell reveal d1">TCS</div>
+    <div class="client-cell reveal d2">HCL Americas</div>
+    <div class="client-cell reveal d3">LTI Mindtree</div>
+  </div>
+  <div class="clients-row">
+    <div class="client-cell reveal">ExxonMobil</div>
+    <div class="client-cell reveal d1">Harman</div>
+    <div class="client-cell reveal d2">Hexaware</div>
+    <div class="client-cell reveal d3">Symphony Teleca</div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-eyebrow">Available for Partnerships</div>
+  <div class="contact-heading reveal">LET'S<br/><span>CONNECT</span></div>
+  <p class="contact-sub reveal d1">Whether you're hiring, hunting, or looking to collaborate in the US IT staffing world — reach out.</p>
+  <div class="contact-actions reveal d2">
+    <a href="https://www.linkedin.com/in/ravinder-negiuk" target="_blank" class="btn filled">LinkedIn Profile ↗</a>
+    <a href="mailto:ravinder@example.com" class="btn">Send Email</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-copy">© 2026 Ravinder Negi — Designed with intention.</div>
+  <div class="ft-links">
+    <a href="https://www.linkedin.com/in/ravinder-negiuk" target="_blank">LinkedIn</a>
+    <a href="#experience">Experience</a>
+    <a href="#clients">Clients</a>
+  </div>
+</footer>
+
+<script>
+// cursor
+const cur=document.getElementById('cur');
+let mx=window.innerWidth/2,my=window.innerHeight/2;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function tick(){cur.style.left=mx+'px';cur.style.top=my+'px';requestAnimationFrame(tick)})();
+document.querySelectorAll('a,button,.btn,.client-cell,.sp-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('hover'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('hover'));
+});
+
+// loader
+const fill=document.getElementById('ld-fill');
+const num=document.getElementById('ld-num');
+let p=0;
+const iv=setInterval(()=>{
+  p=Math.min(p+(Math.random()*12+4),100);
+  fill.style.width=p+'%';
+  num.textContent=Math.floor(p)+'%';
+  if(p>=100){clearInterval(iv);setTimeout(()=>document.getElementById('loader').classList.add('out'),200)}
+},60);
+
+// clock
+function tick(){
+  const t=new Date();
+  const h=String(t.getHours()).padStart(2,'0');
+  const m=String(t.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent='Local / '+h+':'+m;
+}
+tick();setInterval(tick,1000);
+
+// exp counter
+(function(){
+  let n=0;const el=document.getElementById('exp-counter');
+  const iv2=setInterval(()=>{n++;el.textContent=n;if(n>=10)clearInterval(iv2)},100);
+})();
+
+// nav scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
+});
+
+// marquee
+const items=[
+  'Full-Cycle Recruitment','◆','Java Developers','◆','DevOps Engineers','◆',
+  'Cloud Architects','◆','Data Engineers','◆','Network Specialists','◆',
+  'H1B · GC · EAD','◆','C2C · W2 · 1099','◆','Oracle Experts','◆','Project Managers','◆',
+  'Full-Cycle Recruitment','◆','Java Developers','◆','DevOps Engineers','◆',
+  'Cloud Architects','◆','Data Engineers','◆','Network Specialists','◆',
+  'H1B · GC · EAD','◆','C2C · W2 · 1099','◆','Oracle Experts','◆','Project Managers','◆'
+];
+const mq=document.getElementById('mq');
+mq.innerHTML=items.map(i=>`<span class="m-item">${i}</span>`).join('');
+
+// reveal
+const obs=new IntersectionObserver(en=>{
+  en.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target)}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
